@@ -25,18 +25,15 @@ LIBS     = libalgorithm.a
 INCLUDES = stack/*.h \
 
 
-MODS  = stack \
+MODS  = stack tree \
 
 all : output
 
 compile:
 	for module in $(MODS);\
 	do\
-		make compile -j4 -C $$module;
+		make compile -j4 -C $$module;\
 	done
-
-$(OBJS) : compile
-
 
 output: $(LIBS)
 	rm -rf ./output
@@ -50,8 +47,16 @@ output: $(LIBS)
 	done
 	rm -f $(LIBS)
 
-$(LIBS) : $(OBJS)
-	ar cqs $@ $^
+$(LIBS) : compile
+	@echo "test"
+	OBJS="test"
+	@echo $(OBJS)
+	for module in $(MODS);\
+	do\
+		NEW=`ls $$module/*.o`;\
+	done
+	@echo $(OBJS)
+	ar cqs $@ $(OBJS)
 
 clean:
 	rm -fr $(LIBS)
