@@ -69,7 +69,7 @@ public:
 
         for (int i=_alloc_size; i<new_size; i++) {
             new_array[i]._base  = 0;
-            new_array[i]._check = -1;
+            new_array[i]._check = 0;
         }
 
         delete [] _array;
@@ -133,6 +133,11 @@ public:
         int ret  = 0;
         int next = 0;
 
+        DEBUG_LOG<<"start: "<<start<<" depth: "<<siblings[0]._depth;
+        for (i=0; i<siblings.size(); i++) {
+            DEBUG_LOG<<"siblings["<<i<<"]:"<<siblings[i]._code;
+        }
+
         while (true) {
             for (i=0; i<siblings.size(); i++) {
                 DartNode& node = siblings[i]; 
@@ -142,7 +147,7 @@ public:
                     resize(next + next/2);
                 }
                 
-                if(_array[next]._check != -1) {
+                if(_array[next]._check != 0) {
                     nonzero_num ++;
                     break;
                 }
@@ -159,10 +164,12 @@ public:
             instance._next_check_pos = base + siblings[0]._code;
         }
 
+        DEBUG_LOG<<"base: "<<base;
         for (i=0; i<siblings.size(); i++) {
             DartNode& node = siblings[i]; 
             next = base + node._code;
             _array[next]._check = start;
+            DEBUG_LOG<<"next: "<<next<<" start: "<<start;
         }
 
         for (i=0; i<siblings.size(); i++) {
@@ -202,8 +209,12 @@ public:
         root._left  = 0;
         root._right = keys.size();
 
+        //virtual node
+        _array[0]._base  = -1;
+        _array[0]._check = -1;
+
         //check is root
-        _array[0]._check = -2;
+        _array[1]._check = -1;
         std::vector<DartNode> siblings;
         ret = fetch(root, keys, siblings);
         if (ret != 0) {
@@ -219,13 +230,13 @@ public:
         DartInstance instance;
         instance._next_check_pos = 0;
 
-        _array[0]._base = insert(keys, siblings, instance, 0);
+        _array[1]._base = insert(keys, siblings, instance, 1);
 
         return 0;
     }
 
     int exact_match(KeyType& key) {
-        int start = 0;
+        int start = 1;
         int next  = 0;
 
         for (int i=0; i<key.size(); i++) {
