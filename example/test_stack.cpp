@@ -9,7 +9,7 @@
 #include <logging.h>
 #include <stack/stack.h>
 
-using namespace glorey::algorithm;
+using namespace wangl::algorithm;
 
 int test1() {
     Stack<int> stack(4);
@@ -18,7 +18,7 @@ int test1() {
     }
 
     while (stack.size() != 0) {
-        NOTICE_LOG<<"pop from stack "<<stack.pop();
+        log_info("pop from stack %d.", stack.pop());
     }
     return 0;
 }
@@ -30,7 +30,7 @@ int test2() {
     }
 
     while (stack.size() != 0) {
-        NOTICE_LOG<<"pop from stack "<<stack.pop();
+        log_info("pop from stack %d.", stack.pop());
     }
     return 0;
 }

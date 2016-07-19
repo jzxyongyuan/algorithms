@@ -8,15 +8,9 @@
 
 #include <boost/exception/all.hpp>
 
-namespace glorey {
+namespace wangl {
 namespace algorithm {
 
-//定义错误信息类型，
-typedef boost::error_info<struct tag_err_no, int> err_no;
-typedef boost::error_info<struct tag_err_str, std::string> err_str;
-class StackException : virtual public std::exception,
-                       virtual public boost::exception {
-};
 
 /**
  * class stack
@@ -27,9 +21,7 @@ class Stack {
 public:
     Stack(int capacity) {
         _array     = new T[capacity];
-        if (NULL == _array) {
-            throw StackException()<< err_no(-1) << err_str("new for stack array failed.");
-        }
+        assert(_array != NULL);
         this->_capacity = capacity;
         this->_size = 0;
     }
@@ -41,18 +33,12 @@ public:
     }
 
     void push(const T& value) {
-        if (_size == _capacity) {
-            throw StackException()<< err_no(-1) << err_str("stack is full.");
-        }
-
+        assert(_size != _capacity);
         _array[_size++] = value;
     }
 
     T pop() {
-        if (_size == 0) {
-            throw StackException()<< err_no(-1) << err_str("stack is empty.");
-        }
-
+        assert(_size != 0);
         return _array[--_size];
     }
 

@@ -24,18 +24,18 @@ int main(int argc, char* argv[]) {
     key2.push_back(4);
     keys.push_back(key2);
 
-    glorey::algorithm::DoubleArray dart;
+    wangl::algorithm::DoubleArray dart;
 
     dart.build(keys);
 
     int ret = dart.exact_match(key1);
-    NOTICE_LOG<<"find index of key1 "<<ret;
+    log_info("find index of key1 %d.", ret);
 
     ret = dart.exact_match(key2);
-    NOTICE_LOG<<"find index of key2 "<<ret;
+    log_info("find index of key2 %d.", ret);
 
     key2.push_back(5);
     ret = dart.exact_match(key2);
-    NOTICE_LOG<<"find index of key2 "<<ret;
+    log_info("find index of key2 %d.", ret);
     return 0;
 }

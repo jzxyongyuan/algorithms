@@ -6,11 +6,11 @@
 *  
 **/
 
-
+#include <assert.h>
 #include <logging.h>
 #include <vector>
 
-namespace glorey {
+namespace wangl {
 namespace algorithm {
 
 
@@ -59,7 +59,7 @@ public:
 
         DartUnit* new_array = new DartUnit[new_size];
         if (new_array == NULL) {
-            FATAL_LOG<<"new for new_array failed.";
+            log_fatal("new for new_array failed.");
             return -1;
         }
 
@@ -98,7 +98,7 @@ public:
             cur = length == parent._depth ? 0 : key[parent._depth];
             if (cur != pre) {
                 if (cur < pre) {
-                    ERROR_LOG<<"keys is not sorted.";
+                    log_warn("keys is not sorted.");
                     return -1;
                 }
 
@@ -128,14 +128,15 @@ public:
                         DartInstance& instance, int start) {
 
         int base = (instance._next_check_pos > siblings[0]._code ? instance._next_check_pos : siblings[0]._code) - siblings[0]._code;
-        int i    = 0;
+        size_t i    = 0;
         int nonzero_num = 0;
         int ret  = 0;
         int next = 0;
 
-        DEBUG_LOG<<"start: "<<start<<" depth: "<<siblings[0]._depth;
+        log_debug("start: %d depth:%d.", start, siblings[0]._depth);
+
         for (i=0; i<siblings.size(); i++) {
-            DEBUG_LOG<<"siblings["<<i<<"]:"<<siblings[i]._code;
+            log_debug("siblings[%d]: %d", i, siblings[i]._code);
         }
 
         while (true) {
@@ -164,12 +165,13 @@ public:
             instance._next_check_pos = base + siblings[0]._code;
         }
 
-        DEBUG_LOG<<"base: "<<base;
+        log_debug("base: %d", base);
+
         for (i=0; i<siblings.size(); i++) {
             DartNode& node = siblings[i]; 
             next = base + node._code;
             _array[next]._check = start;
-            DEBUG_LOG<<"next: "<<next<<" start: "<<start;
+            log_debug("next: %d start %d.", next, start);
         }
 
         for (i=0; i<siblings.size(); i++) {
@@ -179,7 +181,7 @@ public:
             std::vector<DartNode> next_siblings;
             ret = fetch(node, keys, next_siblings);
             if (ret < 0) {
-                WARNING_LOG<<"fetch for node failed.";
+                log_warn("fetch for node failed.");
                 return -1;
             }
 
@@ -189,7 +191,7 @@ public:
                 ret = insert(keys, next_siblings, instance, next);
                 
                 if (ret < 0) {
-                    WARNING_LOG<<"insert failed.";
+                    log_warn("insert failed.");
                     return -1;
                 }
                 _array[next]._base = ret;
@@ -218,12 +220,12 @@ public:
         std::vector<DartNode> siblings;
         ret = fetch(root, keys, siblings);
         if (ret != 0) {
-            WARNING_LOG<<"fetch siblings failed.";
+            log_warn("fetch siblings failed.");
             return -1;
         }
 
         if (siblings.size() == 0) {
-            WARNING_LOG<<"siblings is empty.";
+            log_warn("siblings is empty.");
             return 0;
         }
 
@@ -239,7 +241,7 @@ public:
         int start = 1;
         int next  = 0;
 
-        for (int i=0; i<key.size(); i++) {
+        for (size_t i=0; i<key.size(); i++) {
             next = _array[start]._base + key[i]; 
             if (_array[next]._check != start) {
                 return -1;
