@@ -1,5 +1,4 @@
 LOG       = ../../log/output
-BOOST     = ../../../local/boost/
 ALGORITHM = ../output/
 
 INCLUDEDIR =\
@@ -11,13 +10,6 @@ INCLUDEDIR =\
 LIBDIR =\
 	-L $(ALGORITHM)/lib -lalgorithm\
 	-L $(LOG)/lib -llog\
-	-L $(BOOST)lib \
-	-lboost_log_setup\
-	-lboost_log\
-	-lboost_iostreams\
-	-lboost_filesystem\
-	-lboost_system\
-	-lboost_thread\
 	-lpthread -lm -lstdc++ -lcrypto -lrt
 
 GCC = g++
